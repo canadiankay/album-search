@@ -1,4 +1,5 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useState, useEffect } from "react";
+import axios from "axios";
 
 import SearchBar from "components/SearchBar";
 import Results from "components/Results";
@@ -6,7 +7,16 @@ import Results from "components/Results";
 export default function LiveSearch(props) {
   const [term, setTerm] = useState("");
   const [results, setResults] = useState([]);
-
+  
+  useEffect(() => {
+    const url = `https://itunes.apple.com/search?${term}&country=CA&media=music&entity=album&attribute=artistTerm`
+    axios.get(url).then(response => {
+      console.log(response.data.results)
+      setResults([...response.data.results])
+    });
+  }, [term]);
+  // ^this is a dependency so this only renders when term is inputted in search;Whenever this state changes, the useEffect will execute.
+ 
   return (
     <Fragment>
       <header className="logo">
